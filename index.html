@@ -1,29 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS PRoj</title>
-    <link rel="stylesheet" href="styles/login.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cars Design — VulWat</title>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #0b1020, #000);
+      color: #eee;
+      overflow-x: hidden;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      margin: 0 15px;
+      color: #ccc;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    nav a:hover { color: #fff; }
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+    .hero-text {
+      flex: 1 1 400px;
+      padding-right: 20px;
+    }
+    .hero-text h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, #ef4444, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-canvas {
+      flex: 1 1 400px;
+      height: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .features, .gallery, .contact {
+      max-width: 1200px;
+      margin: 80px auto;
+      padding: 0 20px;
+    }
+    .features h2, .gallery h2, .contact h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .gallery-item {
+      background: linear-gradient(135deg, #ef4444, #ec4899);
+      height: 150px;
+      border-radius: 15px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      font-weight: bold;
+      color: #fff;
+      padding: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+      color: #777;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
 <body>
-    <div class="background">
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:40px;height:40px;background:linear-gradient(135deg,#ef4444,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;">V</div>
+      <div>
+        <div style="font-weight:bold;">VulWat Cars</div>
+        <small style="color:#999;">Design Studio</small>
+      </div>
     </div>
-    <h1></h1>
-    <div class="form">
-        <h1>Login</h1>
-        <input type="text" id="loginUsername" placeholder="Имя пользователя" required>
-        <input type="password" id="loginPassword" placeholder="Пароль" required>
-        <button type="button" id="loginButton">Log in</button>
-        <a href="Register.html">If you don't have an account</a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text" data-aos="fade-right">
+      <h1>Concept Cars & Bold Design</h1>
+      <p style="color:#bbb;margin-top:15px;">We craft futuristic car concepts with 3D motion and unique styling using modern web technologies.</p>
     </div>
-    <script src="scripts/login.js"></script>
+    <div class="hero-canvas" id="scene-container" data-aos="fade-left"></div>
+  </section>
+
+  <section class="features" id="features">
+    <h2 data-aos="fade-up">Why Choose Us</h2>
+    <div class="feature-grid">
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+        <h3>Low-poly Models</h3>
+        <p>Fast rendering and clean futuristic look perfect for the web.</p>
+      </div>
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+        <h3>Custom Animations</h3>
+        <p>Dynamic 3D visuals using Three.js with smooth animations.</p>
+      </div>
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+        <h3>Responsive Design</h3>
+        <p>Beautiful and functional on all screen sizes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" id="gallery">
+    <h2 data-aos="fade-up">Gallery</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item" data-aos="zoom-in">Concept 1</div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">Concept 2</div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">Concept 3</div>
+      <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">Concept 4</div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2 data-aos="fade-up">Contact</h2>
+    <form data-aos="fade-up" data-aos-delay="100" style="display:flex;flex-direction:column;gap:10px;max-width:500px;">
+      <input type="text" placeholder="Your Name" style="padding:10px;border:none;border-radius:5px;outline:none;background:rgba(255,255,255,0.1);color:#fff;" />
+      <input type="email" placeholder="Email" style="padding:10px;border:none;border-radius:5px;outline:none;background:rgba(255,255,255,0.1);color:#fff;" />
+      <textarea placeholder="Message" rows="4" style="padding:10px;border:none;border-radius:5px;outline:none;background:rgba(255,255,255,0.1);color:#fff;"></textarea>
+      <button style="padding:10px 15px;border:none;border-radius:8px;background:linear-gradient(90deg,#ef4444,#ec4899);color:#000;font-weight:bold;cursor:pointer;">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Cars — Futuristic Web Design
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Three.js simple car scene
+    const container = document.getElementById('scene-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b1020);
+
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 2, 7);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x080820, 0.8);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 10, 7);
+    scene.add(dir);
+
+    const bodyGeom = new THREE.BoxGeometry(3.2, 0.9, 1.6);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.6, roughness: 0.25 });
+    const body = new THREE.Mesh(bodyGeom, bodyMat);
+    body.position.y = 0.6;
+    scene.add(body);
+    // const loader = new THREE.GLTFLoader();
+    // loader.load('models/lx570.glb', gltf => {
+    // const car = gltf.scene;
+    // scene.add(car);
+    // car.position.set(0, 0, 0);
+    // car.scale.set(1.5, 1.5, 1.5);
+    // });
+    const cabinGeom = new THREE.BoxGeometry(1.6, 0.6, 1.2);
+    const cabinMat = new THREE.MeshStandardMaterial({ color: 0x111, metalness: 0.2, roughness: 0.2 });
+    const cabin = new THREE.Mesh(cabinGeom, cabinMat);
+    cabin.position.set(0, 1.05, 0);
+    scene.add(cabin);
+
+    // const wheelGeom = new THREE.CylinderGeometry(0.30, 0.20, 16, 48);
+    const wheelGeom = new THREE.CylinderGeometry(0.36, 0.36, 0.2, 32);
+    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
+    // const wheelMat = new THREE.MeshStandardMaterial({ 
+    //     color: 0x000, 
+    //     metalness: 0.9,
+    //     roughness: 0.1 
+    // });
+
+    // const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
+    // line.position.copy(w.position);
+    // line.rotation.copy(w.rotation);
+    // scene.add(line);
+    const pointLight = new THREE.PointLight(0xffffff, 0.6);
+    pointLight.position.set(0, 5, 5);
+    scene.add(pointLight);
+
+    
+    const wheels = [];
+    const wheelPositions = [
+    [-1.35, 0.24, 0.8],
+    [1.35, 0.24, 0.8],
+    [-1.35, 0.24, -0.8],
+    [1.35, 0.24, -0.8]
+    ];
+    const spokeCount = 8;
+    wheelPositions.forEach(pos => {
+        const w = new THREE.Mesh(wheelGeom, wheelMat);
+        w.rotation.x = Math.PI /2;
+        w.position.set(...pos);
+        for(let i = 0; i < spokeCount; i++) {
+            const angle = (i / spokeCount) * Math.PI * 2;
+            const spokeGeom = new THREE.BoxGeometry(0.02, 0.32, 0.38);
+            const spokeMat = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // красные спицы
+            const spoke = new THREE.Mesh(spokeGeom, spokeMat);
+            spoke.position.set(0, 0, 0); 
+            spoke.rotation.y = angle;
+            w.add(spoke);
+       }
+        scene.add(w);
+        wheels.push(w);
+    });
+    
+    const planeGeo = new THREE.PlaneGeometry(20, 20);
+    const planeMat = new THREE.MeshStandardMaterial({ color: 0x071029, metalness: 0.1, roughness: 0.8 });
+    const plane = new THREE.Mesh(planeGeo, planeMat);
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.y = 0;
+    scene.add(plane);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      body.position.y = 0.6 + Math.sin(Date.now() * 0.002) * 0.03;
+      cabin.position.y = 1.05 + Math.sin(Date.now() * 0.002) * 0.03;
+      wheels.forEach(w => w.rotation.y -= 0.1);
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+  </script>
 </body>
 </html>
